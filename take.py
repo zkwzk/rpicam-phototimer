@@ -11,33 +11,19 @@ def try_to_mkdir(path):
 
 def prepare_dir(base, now):
     path = str(now.year)
-    try_to_mkdir(base + "/" +path)
+    try_to_mkdir(base + "/" + path)
 
-    path = str(now.year)  + "/"  + str(now.month)
-    try_to_mkdir(base + "/" +path)
-
-    path = str( datetime.now().year)  + "/"  + str( datetime.now().month)+"/"+ str( datetime.now().day)
-    try_to_mkdir(base + "/" +path)
-
-    path =  str( datetime.now().year)  + "/"  + str( datetime.now().month)+"/"+ str( datetime.now().day)+"/"+ str( datetime.now().hour)
-    try_to_mkdir(base + "/" +path)
     return path
 
 def make_os_command(config, exposureMode , file_name):
     height = config["height"]
     width = config["width"]
 
-    os_command = "/opt/vc/bin/raspistill -q "+str(config["quality"])+" "
-    if(config["flip_horizontal"]):
-        os_command = os_command + "-hf "
-    if(config["flip_vertical"]):
-        os_command = os_command + "-vf "
+    os_command = "/usr/bin/rpicam-still "
 
-    os_command = os_command + "-h "+str(height)+\
-        " -w "+str(width)+\
-        " --exposure " +exposureMode +\
-        " --metering " + config["metering_mode"] +\
-        " -o "+file_name
+    os_command = os_command + "--height "+str(height)+\
+        " --width "+str(width)+\
+        " --output "+file_name
     return os_command
 
 def run_loop(base, pause, config):
@@ -57,9 +43,13 @@ def run_loop(base, pause, config):
         if (take_shot == True):
             now = datetime.now()
             path = prepare_dir(base, now)
-
-            mili = str(current_milli_time())
-            name=path.replace("/", "_") + "_" + mili + ".jpg"
+            name = (
+                f"{path}_"
+                f"{now.month:02d}_"
+                f"{now.day:02d}_"
+                f"{now.hour:02d}_"
+                f"{now.minute:02d}.jpg"
+            )
             print("Capturing " + name + " in " + exposureMode + " mode")
             file_name = base + "/" + path + "/" + name
 
