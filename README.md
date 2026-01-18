@@ -26,4 +26,4 @@ chmod +x start.sh
 To reconnect later type in `screen -r`.
 
 4. after take the photo, use the `./killscreen` to kill the script
-5. use `./make-video.sh` to make a time-lapse video based on the photo it took.
+5. use `./make-video.sh` to make a time-lapse video based on the photo it took, it will generate the `timelapse.mp4` under the root folder
